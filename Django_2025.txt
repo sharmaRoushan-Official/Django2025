@@ -1,0 +1,149 @@
+Python:-
+------------------------------------
+>> Python was developed by Guido Van Rossum.
+>> Python was released in 1989 and the first version of python was released in 1991.
+>> Python is a high level, object-oriented, interpreted and general purpose programming language.
+>> Python is Easy to learn.
+-------------------------------------------------------------------------------------------------------
+>> Python is a high level programming language by which we can develop various kind of applications.
+
+>> How types of applications?
+>> 1. CUI- [CommandLine User Interface]
+	a). Console based applications => CMD [Command Prompt.]
+	>> User should know each and every command than it intract with your applications.
+>> 2. GUI - [Graphical User Interface]
+	>> GUI first time developed by Xerox-PARC
+	a). Desktop Applications. [Windows Baised Application]
+	>> An application that runs with the help of O.S.
+	>> Compatibility Issue:- Application must be compatible with your O.S.
+	b). Web Application - [Django,Flask]
+	>> An applications that runs with the help of web Browser.
+	>> It follows client-server architecture.
+	>> An application that can access by Anywhere.
+	>> c). Machine Learning
+	>> d). Data Analyst
+	>> e). Deep Learning
+	>> f). Virtual Reality
+	>> g). IoT [Internet of Things]
+	>> h). AI [Artificial Intelligence]
+-----------------------------------------------------------------------------------------------------
+>> Client-Server Architecture:-
+---------------------------------------
+>> Client Sends the request to the server and server response to the cilent.
+
+>> 1.client ----------------> request/response<--------------------------- 2.Sever
+>> Web Browser						>> Python:
+>> HTMl							>> WebServer: -Framework[Django]
+>> Css							>> When you install django in your pC
+>> JavaScript						>> then it provide you development server
+>> jquery						>> in which you can run all your django
+>> Bootstrap						>> applications.
+>> angular
+>> React.js
+>> Next.js
+-----------------------------------------------------------------------------------------------------
+>> Some Example of WerServer:
+	>> 1. Windows O.S : - IIS [Internet Information Server]
+	>> 2. Linux ---------> Apache, TomCat, Nginx
+>> Some Example of Development/Hosting Sever
+	>> 1. Digitial Ocean
+	>> 2. Python Anywhere
+	>> 3. Linode
+	>> 4. Heroku
+------------------------------------------------------------------------------------------------------
+>> Django:
+	>> Django is not a programming language, it is a framework to develop web application only.
+	>> Django support MVT architecture. [Model, view, Template]
+
+>> M- Model - [DAL]- [Data Access Layer] - Database
+>> V- View- [BAL] - [Business Access Layer] - [Python-Logic Building]
+>> T- Template-[PLL]-[Presentation Logic Layer]-[Frontent-HTML,CSS,JavaScript]
+---------------------------------------------------------------------------------------------------------
+
+# Assignment
+-----------------------------------
+Type this command in Your command prompt
+----------------------------------------------
+Win+R-> Type cod and then press Enter
+-----------------------------------------------
+Command to check python version -  python --version
+---------------------------------------------------------
+command to check pip version - pip --version
+----------------------------------------------------------
+Install Django in your pc -  pip install Django==5.2.5
+-----------------------------------------------------------
+command to check django Version - django-admin --version
+---------------------------------------------------------------------------------------------
+Note: When you installed any package all packages are installed Globally.[Python global folder]
+	1). Project - 1
+		>> Python
+		>> pandas 
+		>> pillow
+	2). Project -2
+		>> Python
+		>> requests
+		>> django-framework+ python+pandas+pillow
+	3). Project - 3
+		>> python
+		>> scipy
+		>> numpy
+		>> matplotlib+  requests+django-framwork+ pandas+ pillow
+-------------------------------------------------------------------------------------------------------
+Note: It means don't work Globally while crating project in Django.
+	>> In Django you have to install all the libraries locally.
+	>> When you install any library locally then it provide isolation for your project.
+----------------------------------------------------------------------------------------------------
+	4). project - 4
+		>> After creating Project first of all create Virtual Environment.
+		>> VE provide isolation for your project.
+		>> VE is nothing just like a folder.
+			>> venv - > folderName of VE
+			>> Inside this folder you will get two things:- 
+					>> Python
+					>> pip-> Empty [Getting from Python Global Folder.).
+------------------------------------------------------------------------------------------------------
+>> Steps for Creating Virtual Environment
+--------------------------------------------
+1). creating working Directory of your project.
+	>> Create one folder -  Django2025- creater another folder
+2). Project name is Project -1
+3). Now create VE -
+	>> Install VE
+	>> Win+R => cmd => pip install virtualenv
+	>> virtualenv --version
+	>> Command to create VE
+	>> virtualenv anyFoldername [venv]
+4). Now, open your project with cmd and run virtualenv command.
+5). Now, Activate your virtualenv..
+	>> venv\scripts\activate
+6). Now, check your project has connected locally or Globlly.
+	>> pip freeze
+7). Now, Deactivate your VE
+	>> deactivate- When you deactivate your VE it means again your project has connected globally.
+---------------------------------------------------------------------------------------------------------
+Lecture-2
+----------------------------------------------------------------------------------------------------
+Createing Django Project;-
+--------------------------------------------------------------
+>> Command to Create Django Project:-
+	>> django-admin startproject [ProjectName]
+----------------------------------------------------------------------------------
+>> How to open this project in VS Code:
+	>> How to set in thrminal with command Prompt Default project.:-
+---------------------------------------------------------------------------
+In VS code goto:-
+	>> ...(three dots) ---> view ---> Command Palette
+	>> search  Terminal:select Defatult Profile-->command prompt
+
+-----------------------------------------------------------------------------------------------------------------
+>> How to open this project in VS Code:
+----------------------------------------------
+>> Now Run this django server: python manage.py runserver
+	>> URL:- http://127.0.0.1:800/
+----------------------------------------------------------------
+>> 
+
+
+
+
+
