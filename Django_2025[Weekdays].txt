@@ -533,4 +533,162 @@ urlpatterns = [
 ]
 
 --------------------------------------------------------------------------------------------------------------
+>> Django Projects and Apps
+-------------------------------------------------------------------------------------------------
+>> How to Create an app in Django.
+-----------------------------------------------------------------------------------------
+>> python manage.py startapp AppName
+---------------------------------------------------------------------------------------------------
+>> Ex: (EMS:- employee management system)
+-------------------------------------------------------------------------------------
+>> python manage.py startapp EMS
+-------------------------------------------------------------------------------------------------
+>> Steps to Create an app:
+--------------------------------------------------------
+>> 1. python manage.py startapp Appname
+>> 2. Register your App
+>> 3. To register an app we go the settings.py
+	# Application definition
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "EMS",
+]
+--------------------------------------------------------------------------------------------------
+>> 4. URL mapping
+	>> How to travel from Project to app.
+
+	urlpatterns = [
+    		path("admin/", admin.site.urls),
+    		path('ems/',include('EMS.urls')),
+	]
+-----------------------
+from Browser:- 127.0.0.1:8000/ems/
+------------------------------------------------------------------------------------
+>> 5. Create one file i.e urls.py [inside your app]
+	>> In urls.py [EMS]
+	>> from django.urls import path
+	>> urlspattern=[
+
+		]
+--------------------------------------------------------------------------------------------------
+>> In views.py[ems]
+--------------------------------------------------------------------------
+from django.shortcuts import render
+from django.http import HttpResponse
+
+# Create your views here.
+
+
+def viewHello(request):
+    resp = HttpResponse("<h1>Hello Uday Rasal</h1>")
+    return resp
+
+
+def viewSum(request,a,b):
+    resp = HttpResponse("<h1>The sum of two numebrs is:"+str(a+b)+"</h1>")
+    return resp
+
+------------------------------------------------------------------------------------------------
+>> In urls.py[ems]
+----------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    path('home/',viewHello),
+    path('sum/<int:a>/<int:b>/',viewSum),
+    
+]
+
+--------------------------------------------------------------------------------------------------
+>> How to run template file in your app.
+--------------------------------------------------------------------------------------------
+1. Create a folder name as templates inside your app_name.
+2. Create another folder name as your app_name inside template folder.
+3. Now you can create N number of html files in your app_name folder.
+-----------------------------------------------------------------------------------------------
+>> DTL:[Django Template Language]
+----------------------------------------------------------------------
+>> It stands for Django Template language.
+>> DTL runs at the server side.
+>> DTL is used to change the html content dynamically.
+----------------------------------------------------------------------------------------------
+>> Python 					>> DTL
+-------------------------------------------------------------------------------------------------
+1. Python used concept of variable .		1). DTL also used concept of variable.
+2. Pyton used the concept of Data types.	2). DTL is no concept of data.
+3. Python used the concept of operator.		3). DTL also used the concept of Operators.
+>> Logical Operator[and,not,or]			
+>> membership oeprator[in, not in]
+>> identity operator[is, is not]
+>> Assignemnt operator[=]
+>> relational operator[<,>,<=,>=,==,!=]
+>> Arithemtic Operator[%,/,//,*,-,+]
+------------------------------------------------------------------------------------------
+>> DTL Operators:
+>>	Boolean operators
+>>		== operator
+>>		!= operator
+>>		< operator
+>>		> operator
+>>		<= operator
+>>		>= operator
+>>		in operator
+>>		not in operator
+>>		is operator
+>>		is not operator
+-------------------------------------------------------------------------------------------------
+4). Python use the concept of conditional statemets	4). DTL also used the conditional statement.
+	>> if,elif,else						>> {% if condition %}
+								>> statement1
+								>> {% else %}
+								>> statement2
+								>> {% endif %}
+5). Python used the concept of "for-in "loop.		5). DTL only used Loop.
+	>> for - while					>> >> for in:	
+	>> for							>> for-in
+		>> for-range
+6). Python use the concept of  functions.		6). DTL use the concept of Tags and Filters
+
+
+
+
+---------------------------------------------------------------------------------------------------
+<!-- ### 📝 DTL Practice Questions
+
+1. Write a DTL template snippet to check the **smallest of two numbers**.
+2. Write to display the **largest of three numbers** using `{% if %}`, `{% elif %}`, `{% else %}`.
+3. Write a DTL condition to check if a given number is **even or odd**.
+4. Write a DTL snippet to check if a given number is **positive, negative, or zero**.
+5. Write to check whether a given **string contains the word "Django"**.
+6. Write to check if a list `students` is **empty or not**.
+7. Write a DTL loop to display numbers from **1 to 10**.
+8. Write a DTL loop to display all **even numbers** from a list `numbers`.
+9. Write a DTL loop to print **all student names in uppercase** from a list `students`.
+10. Write to check whether the length of a list `items` is **greater than 5**.
+11. Write a DTL condition to display `"Welcome, Admin"` if `user.is_superuser` is `True`, otherwise `"Welcome, User"`.
+12. Write to display `"Eligible to vote"` if `age >= 18`, otherwise `"Not eligible"`.
+13. Write to check if two strings `str1` and `str2` are **equal or not**.
+14. Write a DTL loop to calculate the **sum of numbers** in a list `numbers`.
+15. Write to check whether a given number is a **multiple of 5**.
+16. Write a DTL condition to display the **grade (A, B, C, Fail)** based on marks.
+17. Write to check if today’s date matches the user’s `dob` and display `"Happy Birthday!"`.
+18. Write to display the **first 3 elements** of a list `fruits`.
+19. Write to display `"Login required"` if `user.is_authenticated` is `False`, otherwise `"Hello, {{ user.username }}"`.
+20. Write a DTL snippet to **reverse a string** using filters.
+
+--- -->
+	
+
+
+
+
 
