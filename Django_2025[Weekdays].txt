@@ -686,9 +686,1612 @@ urlpatterns = [
 20. Write a DTL snippet to **reverse a string** using filters.
 
 --- -->
+-------------------------------------------------------------------------------------------------
+In index.html [EMS]
+---------------------------------
+<h1>1.Write a program to check number is equal to 100 or not.</h1>
+    {{a}} -->
+    <!-- DTL condition -->
+    <!-- {% if a == 100  %}
+    <h1>{{a}} is equal to 100 </h1>
+    {% else %}
+    <h1>{{a}} is not equal to 100</h1>
+    {% endif %}
+----------------------------------------------------------------------
+In views.py [EMS]
+----------------------------------------------------------
+# 1. Write a program to check number is equal to 100 or not
+# def viewIndex(request):
+#     d1={'a':99}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+-------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+In index.html [EMS]
+--------------------------------------------------
+<h2>2.Write to check smalles into two numbers.</h2>
+    <!-- {{a}}|{{b}} -->
+    {% if a <= b %}
+    <h1>{{a}} is smaller than {{b}} </h1>
+    {% else %}
+    <h1>{{b}} is smaller than {{a}}</h1>
+    {% endif %}
+---------------------------------------------------------------------------------------------------
+In views.py [EMS]
+------------------------------
+def viewIndex(request):
+    d1 = {'a':2000,'b':1000}
+    resp = render(request,"EMS/index.html",context=d1)
+    return resp
+----------------------------------------------------------------------------------------------
 	
+LOOP in DTL
+------------------------------------------------------------------------------------------------------
+>> In DTL only for-in loop has supported.
+>> syntax:
+-------------------------------------------------------------------------------------------
+{% for variableName in expression/collection %}
+statement 
+{% endfor %}
+------------------------------------------------------------------------------------------------------
+>> Wap to show 10 dummy employee records.
+-----------------------------------------------------------------------------------------------
+In views.py [EMS]
+-----------------------------------------------------------------
+class Employee:
+    def __init__(self):
+        self.name = ""
+        self.age = 0
+        self.address = ""
+        self.mobileNo = ""
+        self.post = ""
+        self.salary = 0
+
+def get_N_Employee(n):   # n = 10
+    empList = []
+    for i in range(1,n+1):   # n= 1,19
+        emp = Employee()
+        emp.name = "Pawan"+str(i)
+        emp.age = 23+ i 
+        emp.address = "Ashok nagar"+str(i)
+        emp.mobileNo = "46484468464"+str(i)
+        emp.post = "SE"+str(i)
+        emp.salary = 64646464.23+i
+        empList.append(emp)
+    return empList
+
+def viewIndex(request):
+    employees = get_N_Employee(10)
+    for emp in employees:
+        print(emp.name, emp.age, emp.address, emp.mobileNo, emp.post, emp.salary)
+    print("Employee=",employees)
+    resp = render(request,"EMS/index.html")
+    return resp
+---------------------------------------------------------------------------------------------------
+In urls.py [EMS]
+-----------------------------------------------
+from django.urls import path
+from EMS.views import *
 
 
+
+urlpatterns = [
+    path('index/',viewIndex),
+    
+]
+--------------------------------------------------------------------------------------------------
+>> How to show data on client means Browser.
+-------------------------------------------------------------------------
+In views.py [EMS]
+------------------------------------------------------------------------------------
+class Employee:
+    def __init__(self):
+        self.name = ""
+        self.age = 0
+        self.address = ""
+        self.mobileNo = ""
+        self.post = ""
+        self.salary = 0
+
+def get_N_Employee(n):   # n = 10
+    empList = []
+    for i in range(1,n+1):   # n= 1,19
+        emp = Employee()
+        emp.name = "Pawan"+str(i)
+        emp.age = 23+ i 
+        emp.address = "Ashok nagar"+str(i)
+        emp.mobileNo = "46484468464"+str(i)
+        emp.post = "SE"+str(i)
+        emp.salary = 64646464.23+i
+        empList.append(emp)
+    return empList
+
+def viewIndex(request):
+    if request.method == "GET":  # it display the page only
+        resp = render(request,"EMS/index.html")
+        return resp
+    elif request.method == "POST":  # it takes the data from html and provide to the server to perform opertions
+        empNo = int(request.POST.get("txtNo",0))
+        employees = get_N_Employee(empNo)
+        # for emp in employees:
+        #     print(emp.name, emp.age, emp.address, emp.mobileNo, emp.post, emp.salary)
+        d1 = {'employees':employees, "empNo":empNo}
+        # print("Employee=",employees)
+        resp = render(request,"EMS/index.html",context=d1)
+        return resp
+--------------------------------------------------------------------------------------------------
+In index.html [EMS]
+-----------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django DTL</title>
+    <style>
+        body{
+            background-color: #f3cfab;
+        }
+        table,
+        th,
+        td {
+            margin: auto;
+            padding: 10px;
+            border: 2px solid;
+        }
+
+        th {
+            height: 70px;
+            background-color: #04AA6D;
+            color: rgb(247, 227, 148);
+        }
+
+        tr:nth-child(even) {
+            background-color: #eb8571;
+        }
+
+        label {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+        }
+
+        input[type=text] {
+            border: 2px solid red;
+            border-radius: 8px;
+            width: 25%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box
+        }
+
+        button {
+            background-color: #f65823eb;
+            /* Green */
+            border-radius: 12px;
+            color: white;
+            padding: 10px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+
+        }
+    </style>
+</head>
+
+<body align="center">
+    <!-- <h1>1.Write a program to check number is equal to 100 or not.</h1>
+    {{a}} -->
+    <!-- DTL condition -->
+    <!-- {% if a == 100  %}
+    <h1>{{a}} is equal to 100 </h1>
+    {% else %}
+    <h1>{{a}} is not equal to 100</h1>
+    {% endif %} -->
+    <!-- <hr> -->
+    <!-- <h2>2.Write to check smalles into two numbers.</h2>
+    <!-- {{a}}|{{b}} -->
+    <!-- {% if a <= b %}
+    <h1>{{a}} is smaller than {{b}} </h1>
+    {% else %}
+    <h1>{{b}} is smaller than {{a}}</h1>
+    {% endif %} --> -->
+    <!-- <hr> -->
+
+    <!-- <h2>2. Write to display the **largest of three numbers** using { if }, { elif },{ else }.</h2>
+
+    {% if a > b and a > c %}
+    <h1>{{a}} is greater than {{b}} and {{c}}</h1>
+    {% elif b > a or b > c %}
+    <h1>{{b}} is greater than {{a}} and {{c}}</h1>
+    {% else %}
+    <h1>{{c}} is greater than {{a}} and {{c}}</h1>
+    {% endif %}
+    <hr/> -->
+    <!-- <h1>3. Write a DTL condition to check if a given number is **even or odd**.</h1> -->
+
+
+    <!-- 4. Write a DTL snippet to check if a given number is **positive, negative, or zero**. -->
+
+
+    <!-- 5. Write to check whether a given **string contains the word "Django"**. -->
+
+    <!-- {% if "Django" in text %}
+    <h1>{{text}}: This string contains the Word Django.</h1>
+    {% else %}
+    <h1>{{text}}: This string not contains the word Django</h1>
+    {% endif %}
+    <hr> -->
+
+    <!-- 6. Write to check if a list `students` is **empty or not** -->
+
+    <!-- <hr/>
+    {% if student %}
+    <h1>{{student}} is not empty </h1>
+    <ul>
+        {% for i in student %}
+        <li>{{i}}</li>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+    <h1>{{student}} list is empty</h1>
+    {% endif %} -->
+
+    <!-- <hr/> -->
+    <!-- <h1>4. wap to find number is absolute or not </h1>
+    {% if a > 0 %}
+    <h1>{{a}} is absolute Number.</h1>
+    {% else %}
+    <h1>{{a}} is Not absolute number.</h1>
+    {% endif %} -->
+
+    <!-- <hr/>
+    <h1>5. Find the greates in Three Numbers.</h1>
+    {% if a > b and a > c %}
+    <h1>{{a}} is greater than {{b}} and {{c}}</h1>
+    {% elif b > a and b > c %}
+    <h1>{{b}} is greter than {{a}} and {{c}}</h1>
+    {% else %}
+    <h1>{{c}} is greter than {{a}} and {{b}}</h1>
+    {% endif %} -->
+    <hr>
+    <h1 align="center">SHOW EMPLOYEE RECORDS</h1>
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label for="">Enter Number of Employee You Want:</label>
+        <input type="text" name="txtNo" value="{{empNo}}">
+        <button>Show Employee</button>
+        <hr/><br/>
+        <!-- {{employees}} -->
+        <table align="center">
+            <tr>
+                <th>NAME</th>
+                <th>AGE</th>
+                <th>ADDRESS</th>
+                <th>MOBILE NO.</th>
+                <th>POST</th>
+                <th>SALARY</th>
+            </tr>
+
+            {% for emp in employees %}
+            <tr>
+                <td>{{emp.name}}</td>
+                <td>{{emp.age}}</td>
+                <td>{{emp.address}}</td>
+                <td>{{emp.mobileNo}}</td>
+                <td>{{emp.post}}</td>
+                <td>{{emp.salary}}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </form>
+
+</body>
+
+</html>
+-------------------------------------------------------------------------------------------
+In urls.py [EMS]
+--------------------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    path('index/',viewIndex),
+    
+]
+
+
+-----------------------------------------------------------------------------------------------------
+
+```plaintext
+Variable            Description
+forloop.counter     The current iteration of the loop (1-indexed)
+forloop.counter0    The current iteration of the loop (0-indexed)
+forloop.revcounter  The number of iterations from the end of the loop (1-indexed)
+forloop.revcounter0 The number of iterations from the end of the loop (0-indexed)
+forloop.first       True if this is the first time through the loop
+forloop.last        True if this is the last time through the loop
+forloop.parentloop  For nested loops, this is the loop surrounding the current one
+```
+--------------------------------------------------------------------------------------------
+>> 1. Print numbers from 1 to 20.
+>> 2. Mulitplication Table of 19.
+>> 3. Squares of Number from 1-10.
+>> 4. First 10 Even Numbers.
+>> 5. First 10 Odd Numbers.
+>> 6. Highlight First and Last Items. fruits = ["Apple","Banana","Cherry","Mango"]
+>> 7. Nested Loop (Students & Subjects)
+>> 8. Countdown using Reverse Counter
+>> 9. Empty Case
+>> 10. Projects and Tasks
+--------------------------------------------------------------------------------------------------
+2.
+---------------
+In practice.html[EMS]
+---------------------------------
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice DTL</title>
+    <style>
+        body {
+            margin: auto;
+            padding: 50px;
+        }
+
+        h1 {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 35px;
+            color: red;
+
+        }
+
+        #div1 {
+            background-color: bisque;
+            align-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <form action="" method="post">
+        {% csrf_token %}
+        <div id="div1">
+            <h1>1. Print numbers from 1 to 20.</h1>
+        </div>
+
+        <hr />
+        <ul>
+            {% for i in numbers %}
+            <li>{{i}}</li>
+            {% endfor %}
+        </ul>
+
+    </form> -->
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <h1>>> 2. Mulitplication Table of 19.</h1>
+            <label for="">Enter Your value here: </label>
+            <input type="text" name="number" id="" value="{{num}}">
+        </div>
+        <div>
+            <button name="btn1">Enter</button>
+        </div>
+
+        <div>
+            <h2>Multiplication Table of {{num}}</h2>
+            {% for j,result in table %}
+            <ul>
+                <li>{{num}} X {{j}} = {{result}}</li>
+            </ul>
+            {% endfor %}
+        </div>
+
+
+    </form>
+</body>
+
+</html>
+---------------------------------------------------------------------------------------------
+In views.py [EMS]
+------------------------------------------------------
+def viewPractice(request):
+    if request.method == "GET":
+        resp = render(request,"EMS/practice.html")
+        return resp
+    if request.method == "POST":
+        num1 = int(request.POST.get("number",0))  # 19
+        table1 = [(i, num1*i) for i in range(1,11)]
+        dict1 = {'table':table1,'num':num1}
+        resp = render(request,"EMS/practice.html",context=dict1)
+        return resp
+---------------------------------------------------------------------------------------------------
+In urls.py [EMS]
+------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    path('practice/',viewPractice),
+    
+]
+-------------------------------------------------------------------------------------------------
+In practice.html[EMS]
+-----------------------------------------------
+<form method="post">
+        {% csrf_token %}
+        
+        <div>
+            <h1>>> 3. Squares of Number from 1-10.</h1>
+        </div>
+        <hr>
+        <div>
+            <label for="">Enter Last range: </label>
+            <input type="text" name="box1" value="{{number}}">
+        </div>
+        <div>
+            <button name="btnSubmit">Submit</button>
+        </div>
+        <div>
+            <h1>Square of the number from 1 to {{number}} is:</h1>
+            <hr>
+            {% for i,j in sqrValue %}
+            <ul>
+                <li>{{i}}<sup>2</sup> = {{j}}</li>
+            </ul>
+            {% endfor %}
+        </div>
+    </form>
+--------------------------------------------------------------------------------
+In views.py [EMS]
+--------------------------------------------------------
+
+def viewPractice(request):
+    if request.method == "GET":
+        resp = render(request,"EMS/practice.html")
+        return resp
+    elif request.method == "POST":
+        num = int(request.POST.get('box1',0))
+
+        sqr = [(i,i**2) for i in range(1,num+1)]
+        dict1 = {'sqrValue':sqr, "number":num}
+        resp = render(request,"EMS/practice.html",context=dict1)
+        return resp
+----------------------------------------------------------------------------
+In urls.py [EMS]
+-----------------------------------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    path('practice/',viewPractice),
+    
+]
+------------------------------------------------------------------------------------------------
+>> 4. First 10 Even Numbers.
+------------------------------------------------------------------
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice DTL</title>
+    <style>
+        body {
+            margin: auto;
+            padding: 50px;
+        }
+
+        h1 {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 35px;
+            color: red;
+
+        }
+
+        #div1 {
+            background-color: bisque;
+            align-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <form action="" method="post">
+        {% csrf_token %}
+        <div id="div1">
+            <h1>1. Print numbers from 1 to 20.</h1>
+        </div>
+
+        <hr />
+        <ul>
+            {% for i in numbers %}
+            <li>{{i}}</li>
+            {% endfor %}
+        </ul>
+
+    </form> -->
+
+    <!-- <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <h1>>> 2. Mulitplication Table of 19.</h1>
+            <label for="">Enter Your value here: </label>
+            <input type="text" name="number" id="" value="{{num}}">
+        </div>
+        <div>
+            <button name="btn1">Enter</button>
+        </div>
+
+        <div>
+            <h2>Multiplication Table of {{num}}</h2>
+            {% for j,result in table %}
+            <ul>
+                <li>{{num}} X {{j}} = {{result}}</li>
+            </ul>
+            {% endfor %}
+        </div> -->
+
+
+    <!-- </form> -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <div>
+            <h1>>> 4. First 10 Even Numbers.</h1>
+        </div>
+        <hr>
+        <div>
+            <label for="">Enter Last range: </label>
+            <input type="text" name="box1" value="{{number}}">
+        </div>
+        <div>
+            <button name="btnSubmit">Submit</button>
+        </div>
+        <div>
+            <h1>First 10 Even Numbers from 1 to {{number}} is:</h1>
+            <hr>
+            {% for i in evenNumber %}
+            <ul>
+                <li>{{i}}</li>
+            </ul>
+            {% endfor %}
+        </div>
+    </form>
+</body>
+
+</html>
+------------------------------------------------------------------------------------------
+In views.py [EMS]
+--------------------------------------------------------------------------
+def viewPractice(request):
+    if request.method == "GET":
+        resp = render(request,"EMS/practice.html")
+        return resp
+    elif request.method == "POST":
+        num = int(request.POST.get('box1',0))
+
+
+        evenNumber = [(i) for i in range(1,num+1) if i%2==0]
+        dict1 = {'evenNumber':evenNumber, "number":num}
+        resp = render(request,"EMS/practice.html",context=dict1)
+        return resp
+----------------------------------------------------------------------------------------
+In urls.py [EMS]
+------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    path('practice/',viewPractice),
+    
+]
+------------------------------------------------------------------------------------------
+>> Project create in Django
+>> URL mapping
+>> view return 
+>> application in django setup
+>> html page render in django application
+>> How to apply DTL in django
+>> How to apply condtion in DTL
+>> How to apply loop in DTL
+-----------------------------------------------------------------------------------------------------
+>> Database Connectivity in Django
+------------------------------------------------------------------------------------------------
+>> Model:
+-----------------------------------------------------------------------------------
+>> Models are the special classes i.e used to crate table and perform database related operations.
+-------------------------------------------------------------------------------------------
+>> Note: To perform connectivity in django we use ORM [Object Relational Mapping] Model.
+>> No need to learn any databases.
+---------------------------------------------------------------------------------------------------
+Table:
+-------------------------------------------------------
+
+mysql> use uday;
+Database changed
+mysql> show tables;
+Empty set (0.01 sec)
+
+mysql> create table student(
+    -> id int not null,
+    -> name char(50),
+    -> age char(10)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_uday |
++----------------+
+| student        |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> describe student;
++-------+----------+------+-----+---------+-------+
+| Field | Type     | Null | Key | Default | Extra |
++-------+----------+------+-----+---------+-------+
+| id    | int      | NO   |     | NULL    |       |
+| name  | char(50) | YES  |     | NULL    |       |
+| age   | char(10) | YES  |     | NULL    |       |
++-------+----------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into student (id,name,age)
+    -> values
+    -> (1,"Uday Rasal",25);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++----+------------+------+
+| id | name       | age  |
++----+------------+------+
+|  1 | Uday Rasal | 25   |
++----+------------+------+
+1 row in set (0.00 sec)
+-----------------------------------------------------------------------------------------------------------------------------------
+>> How to create model classes-
+--------------------------------------------------------------------------------------------------------------
+>> Note: all model classes are defined into the base class called Fields.
+>> Fields:- IntegerField()
+		CharField()
+		BooleanField()
+		EmailField()
+		DateTimeField()
+>> Note: Fields are parent class and IntegerField(), CharField(), Booleanfield(), EmailField(), DateTimeField() are child classes.__
+---------------------------------------------------------------------------------------------------------------------------------------
+------
+In models.py [EMS]
+-----------------------------------------------------------------------------
+from django.db import models
+
+# Create your models here.
+
+
+class Employee(models.Model):    # Model Class
+    id=models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    mobileno = models.CharField(max_length=10)
+    address = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+-----------------------------------------------------------------------------------------------------------------------------
+>> After that we perform migrations command, this automatically create tables in your database.
+>> Table: AppName_Employee  [applicationName_className]
+
+--------------------------------------------------------------------------------------------------------------------------
+In djanog.settings [Project]
+-----------------------------------------------------------------
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------
+Install Sqlite:
+-----------------------------------------------------------------------------------
+https://sqlitebrowser.org/dl/
+-----------------------------------------------------------------------------------------------------------------------
+
+Now Perform Migrations commandas:-
+--------------------------------------------------------
+1. python manage.py makemigrations  -> This command see your model classes and generate ORM Query.
+---------------------------------------------------------------------------------------------------------
+>> you can found this file in your app folder name migrations and file name is "0001__initial.py"
+
+>> In EMS [application]
+>> models.py[]
+---------------------------------------------------------------------------------------
+# Generated by Django 5.2.5 on 2025-09-11 05:29
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Employee',
+            fields=[
+                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ('name', models.CharField(max_length=50)),
+                ('age', models.IntegerField()),
+                ('mobileno', models.CharField(max_length=10)),
+                ('address', models.CharField(max_length=50)),
+            ],
+        ),
+    ]
+
+-----------------------------------------------------------------------------------------------------------------------------------
+>> 2. python manage.py migrate ---> This command see your ORM Query and generate tables in your database.
+---------------------------------------------------------------------------------------------------------------------
+>> total Table create - 12
+-------------------------------------
+Applying EMS.0001_initial... OK
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+-------------------------------------------------------------------------------------------------------------------------------------
+>> How to insert record into this table
+--------------------------------------------------------------------------
+>> MySQL:
+--------------
+mysql> insert into student (id,name,age)
+    -> values
+    -> (1,"Uday Rasal",25);
+Query OK, 1 row affected (0.01 sec)
+---------------------------------------------------------------------------------------------------------------------------------------
+For Testing purpose we write this line in terminal:-
+--------------------------------------------------------------------------------------------------------
+
+>> python manage.py shell
+
+-------------------------------------------------------------------------------
+(venv) D:\2.Django2025\demoProject>python manage.py shell
+7 objects imported automatically (use -v 2 for details).
+
+Python 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> emp = Employee()
+>>> emp.name = "Uday Rasal"
+>>> emp.age = 23
+>>> emp.mobileno = "123456789"
+>>> emp.address = "Ashok Nagar"
+>>> emp.save()
+------------------------------------------------------------------------------------------------------------------------
+>> Check Existing data on the terminal:
+------------------------------------------------------------------------
+>>> emp.name
+'Uday Rasal'
+>>> emp.age
+23
+>>> emp.mobileno
+'123456789'
+>>> emp.address
+'Ashok Nagar'
+---------------------------------------------------------------------
+>> How to add data with html page.
+--------------------------------------------------------
+>> create html page in EMS app [insertems.html]
+-------------------------------------------------------------------------------------------------------
+In insertems.html
+-----------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insert Database EMS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+      border-radius: 1.5rem;
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .btn-custom {
+      background: linear-gradient(to right, #8f94fb, #4e54c8);
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+
+    .btn-custom:hover {
+      background: linear-gradient(to right, #4e54c8, #8f94fb);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <!-- Increase width from col-md-6 to col-lg-8 -->
+      <div class="col-md-8 col-lg-6">
+        <div class="card">
+          <h1>Employee Management System</h1>
+          <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" placeholder="Enter employee name" name="txtName" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Age</label>
+              <input type="number" class="form-control" placeholder="Enter employee age" name="txtAge" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mobile No</label>
+              <input type="tel" class="form-control" placeholder="Enter mobile number" name="txtMobile" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <textarea class="form-control" rows="3" placeholder="Enter employee address" name="txtAddress" required></textarea>
+            </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-custom">Submit</button>
+              <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+--------------------------------------------------------------------------------------------------------
+In views.py [EMS]
+------------------------------------------------------------------------------------------
+def viewInsertEMS(request):
+    if request.method == "GET":
+        resp = render(request,"EMS/insertems.html")
+        return resp
+    elif request.method == "POST":
+        emp = Employee()
+        emp.name = request.POST.get("txtName",'NA')
+        emp.age = request.POST.get("txtAge",0)
+        emp.mobileno = request.POST.get("txtMobile","NA")
+        emp.address= request.POST.get('txtAddress',"NA")
+        emp.save()
+        resp = HttpResponse("<h1>Employee Inserted Successfully!!</h1>")
+        return resp
+-------------------------------------------------------------------------------------------------------
+In urls.py [EMS]
+------------------------------------------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    # path('home/',viewHello),
+    # path('sum/<int:a>/<int:b>/',viewSum),
+    # path('home/',viewHome),  # 127.0.0.1:8000/ems/home/
+    # path('index/',viewIndex),
+    # path('practice/',viewPractice),
+    path('insertems/',viewInsertEMS),
+    
+]
+
+---------------------------------------------------------------------------------------------------------
+>> How to perform ORM model to (Add Employee, Search Employee, Update Employee, Delete Employee,
+show all employee) using html page.
+--------------------------------------------------------------------------------------------------------
+>> How to search and update data with terminal
+-----------------------------------------------------------------------------
+Ctrl click to launch VS Code Native REPL
+Python 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from EMS.models import Employee
+>>> emp = Employee.objects.get(id=2)
+>>> emp.name
+'amit'
+>>> emp.name = "Amit Khale"
+>>> emp.save()
+>>> emp1 = Employee.objects.get(id=2)
+>>> emp1.id
+2
+>>> emp1.name
+'Amit Khale'
+>>> emp1.name = "Apple Singh"
+>>> emp1.age
+22
+>>> emp1.age = 55
+>>> emp1.save()
+>>>
+---------------------------------------------------------------------------------------------------------
+In views.py [EMS]
+-------------------------------------------------------------------------------------------
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.http import JsonResponse
+from EMS.models import *
+
+# Create your views here.
+
+
+# def viewHello(request):
+#     resp = HttpResponse("<h1>Hello Uday Rasal</h1>")
+#     return resp
+
+
+# def viewSum(request,a,b):
+#     resp = HttpResponse("<h1>The sum of two numebrs is:"+str(a+b)+"</h1>")
+#     return resp
+
+
+# def viewHome(request):
+#     resp = render(request,"EMS/hello.html")
+#     return resp
+
+# 1. Write a program to check number is equal to 100 or not
+# def viewIndex(request):
+#     d1={'a':99}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+
+# def viewIndex(request):
+#     d1 = {'a':2000,'b':1000}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+
+# 2. Write to display the **largest of three numbers** using `{% if %}`, `{% elif %}`, `{% else %}`.
+
+# def viewIndex(request):
+#     d1 = {'a':10,'b':15,'c':5}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+
+# def viewIndex(request):
+#     d1 = {'text':"I am Learning Django in Python"}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+
+
+# def viewIndex(request):
+#     d1 = {'student':[]}
+#     resp = render(request,"EMS/index.html",context=d1)
+#     return resp
+
+# def viewIndex(request):
+#     d1 = {'a':30}
+#     resp = render(request,'EMS/index.html',context=d1)
+#     return resp
+
+# def viewIndex(request):
+#     d1 = {'a':100,'b':200,'c':300}
+#     resp = render(request,'EMS/index.html',context=d1)
+#     return resp
+
+
+# class Employee:
+#     def __init__(self):
+#         self.name = ""
+#         self.age = 0
+#         self.address = ""
+#         self.mobileNo = ""
+#         self.post = ""
+#         self.salary = 0
+
+# def get_N_Employee(n):   # n = 10
+#     empList = []
+#     for i in range(1,n+1):   # n= 1,19
+#         emp = Employee()
+#         emp.name = "Pawan"+str(i)
+#         emp.age = 23+ i 
+#         emp.address = "Ashok nagar"+str(i)
+#         emp.mobileNo = "46484468464"+str(i)
+#         emp.post = "SE"+str(i)
+#         emp.salary = 64646464.23+i
+#         empList.append(emp)
+#     return empList
+
+# def viewIndex(request):
+#     if request.method == "GET":  # it display the page only
+#         resp = render(request,"EMS/index.html")
+#         return resp
+#     elif request.method == "POST":  # it takes the data from html and provide to the server to perform opertions
+#         empNo = int(request.POST.get("txtNo",0))
+#         employees = get_N_Employee(empNo)
+#         # for emp in employees:
+#         #     print(emp.name, emp.age, emp.address, emp.mobileNo, emp.post, emp.salary)
+#         d1 = {'employees':employees, "empNo":empNo}
+#         # print("Employee=",employees)
+#         resp = render(request,"EMS/index.html",context=d1)
+#         return resp
+    
+# def viewPractice(request):
+#     if request.method == "GET":
+#         resp = render(request,"EMS/practice.html")
+#         return resp
+#     if request.method == "POST":
+#         num1 = int(request.POST.get("number",0))  # 19
+#         table1 = [(i, num1*i) for i in range(1,11)]
+#         dict1 = {'table':table1,'num':num1}
+#         resp = render(request,"EMS/practice.html",context=dict1)
+#         return resp
+
+
+# def viewPractice(request):
+#     if request.method == "GET":
+#         resp = render(request,"EMS/practice.html")
+#         return resp
+#     elif request.method == "POST":
+#         num = int(request.POST.get('box1',0))
+
+#         sqr = [(i,i**2) for i in range(1,num+1)]
+#         dict1 = {'sqrValue':sqr, "number":num}
+#         resp = render(request,"EMS/practice.html",context=dict1)
+#         return resp
+
+
+
+# def viewPractice(request):
+#     if request.method == "GET":
+#         resp = render(request,"EMS/practice.html")
+#         return resp
+#     elif request.method == "POST":
+#         num = int(request.POST.get('box1',0))
+
+
+#         evenNumber = [(i) for i in range(1,num+1) if i%2==0]
+#         dict1 = {'evenNumber':evenNumber, "number":num}
+#         resp = render(request,"EMS/practice.html",context=dict1)
+#         return resp
+    
+
+
+
+def viewInsertEMS(request):
+    if request.method == "GET":
+        resp = render(request,"EMS/insertems.html")
+        return resp
+    elif request.method == "POST":
+        if 'btnaddemp' in request.POST:
+            emp = Employee()
+            emp.name = request.POST.get("txtName",'NA')
+            emp.age = request.POST.get("txtAge",0)
+            emp.mobileno = request.POST.get("txtMobile","NA")
+            emp.address= request.POST.get('txtAddress',"NA")
+            emp.save()
+            resp = render(request,"EMS/insertSuccess.html")
+            return resp
+        elif 'btnsearchemp' in request.POST:
+            eid = int(request.POST.get('txtId',0))
+            emp = Employee.objects.get(id=eid)
+            # print("--------------ID-------------",emp)
+            d1 = {'emp':emp}
+            resp = render(request,'EMS/insertems.html',context=d1)
+            return resp 
+        elif 'btnupdateemp' in request.POST:
+            emp = Employee()
+            emp.id = int(request.POST.get('txtId',0))
+            if Employee.objects.filter(id=emp.id).exists():
+                emp.name = request.POST.get("txtName","NA")
+                emp.age = int(request.POST.get("txtAge",0))
+                emp.mobileno = request.POST.get("txtMobile","NA")
+                emp.address = request.POST.get("txtAddress","NA")
+                emp.save()
+                resp = render(request,"EMS/updateSucess.html")
+                return resp
+        elif 'btndeleteemp' in request.POST:
+            emp = Employee()
+            emp.id = int(request.POST.get("txtId",0))
+            Employee.objects.filter(id=emp.id).delete()
+            resp = render(request,'EMS/deleteSuccess.html')
+            return resp
+        elif 'btnshowallemp' in request.POST:
+            allemp = Employee.objects.all()
+            d1 = {'employees':allemp}
+            resp = render(request,"EMS/insertems.html",context=d1)
+            return resp
+--------------------------------------------------------------------------------------------------------
+In urls.py [EMS]
+-----------------------------------------------------------------------------------------------
+from django.urls import path
+from EMS.views import *
+
+
+
+urlpatterns = [
+    # path('home/',viewHello),
+    # path('sum/<int:a>/<int:b>/',viewSum),
+    # path('home/',viewHome),  # 127.0.0.1:8000/ems/home/
+    # path('index/',viewIndex),
+    # path('practice/',viewPractice),
+    path('insertems/',viewInsertEMS),
+    
+]
+--------------------------------------------------------------------------------------------------
+In insertems.html [EMS]
+-------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 2.5rem;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.01);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input.form-control {
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.95rem;
+    }
+
+    /* 🎨 Custom button themes */
+    .btn-add {
+      background: linear-gradient(to right, #56ab2f, #a8e063);
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    .btn-search {
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    .btn-update {
+      background: linear-gradient(to right, #f7971e, #ffd200);
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    .btn-delete {
+      background: linear-gradient(to right, #e53935, #e35d5b);
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    .btn-show {
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    .btn-reset {
+      background: #6c757d;
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    /* Hover effect */
+    .btn-add:hover,
+    .btn-search:hover,
+    .btn-update:hover,
+    .btn-delete:hover,
+    .btn-show:hover,
+    .btn-reset:hover {
+      transform: scale(1.08);
+      opacity: 0.92;
+      transition: 0.3s;
+    }
+
+    .text-center button {
+      margin: 6px;
+      padding: 10px 22px;
+    }
+
+    /* Table Styling */
+    table {
+      margin-top: 25px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #4a00e0;
+      color: white;
+      text-align: center;
+    }
+
+    td {
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-7">
+        <div class="card">
+          <h1>Employee Management System</h1>
+          <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">EID</label>
+                <input type="text" class="form-control" placeholder="Enter employee ID" name="txtId" value="{{emp.id}}">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" placeholder="Enter employee name" name="txtName" value="{{emp.name}}">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Age</label>
+                <input type="number" class="form-control" placeholder="Enter employee age" name="txtAge" value="{{emp.age}}">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Mobile No</label>
+                <input type="tel" class="form-control" placeholder="Enter mobile number" name="txtMobile" value="{{emp.mobileno}}">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" placeholder="Enter employee address" name="txtAddress" value="{{emp.address}}">
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-add" name="btnaddemp">Add Emp</button>
+              <button type="submit" class="btn btn-search" name="btnsearchemp">Search Emp</button>
+              <button type="submit" class="btn btn-update" name="btnupdateemp">Update Emp</button>
+              <button type="submit" class="btn btn-delete" name="btndeleteemp">Delete Emp</button>
+              <button type="submit" class="btn btn-show" name="btnshowallemp">Show All Emp</button>
+              <button type="reset" class="btn btn-reset">Reset</button>
+            </div>
+
+            <!-- Table -->
+            <div>
+              <table class="table table-striped table-hover mt-4 shadow-sm">
+                <thead>
+                  <tr>
+                    <th>EID</th>
+                    <th>NAME</th>
+                    <th>AGE</th>
+                    <th>MOBILENO.</th>
+                    <th>ADDRESS</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for emp in employees %}
+                  <tr>
+                    <td  class="text-muted">{{emp.id}}</td>
+                    <td  class="text-muted">{{emp.name}}</td>
+                    <td  class="text-muted">{{emp.age}}</td>
+                    <td  class="text-muted">{{emp.mobileno}}</td>
+                    <td  class="text-muted">{{emp.address}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+---------------------------------------------------------------------------------------------------------
+
+Note: In terminal for show all employee in the shell(testing purpose)
+--------------------------------------------------------------------------------------------------
+>>> from EMS.models import *
+>>> allemp = Employee.objects.all()
+>>> allemp
+<QuerySet [<Employee: Uday Rasal>, <Employee: Nokia Singh>, <Employee: Amit Kumar>, <Employee: Pawan>, <Employee: 
+Trupti Kupekar>, <Employee: Aishwarya Rai bachchan>, <Employee: Sunial shetty>, <Employee: Salman Khan>, <Employee: Rohan Benerjee>, <Employee: Narendra Modi>, <Employee: Ravindra Jadeja>, <Employee: Rohit Sharma>, <Employee: Akshay Kumar>]>
+>>> len(allemp)
+13
+>>> emp = allemp[0:3]
+>>> emp
+[<Employee: Uday Rasal>, <Employee: Nokia Singh>, <Employee: Amit Kumar>]
+>>> emp
+[<Employee: Uday Rasal>, <Employee: Nokia Singh>, <Employee: Amit Kumar>]
+>>> allemp
+<QuerySet [<Employee: Uday Rasal>, <Employee: Nokia Singh>, <Employee: Amit Kumar>, <Employee: Pawan>, <Employee: 
+Trupti Kupekar>, <Employee: Aishwarya Rai bachchan>, <Employee: Sunial shetty>, <Employee: Salman Khan>, <Employee: Rohan Benerjee>, <Employee: Narendra Modi>, <Employee: Ravindra Jadeja>, <Employee: Rohit Sharma>, <Employee: Akshay Kumar>]>
+>>> allemp[-1] 
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "D:\2.Django2025\demoProject\venv\Lib\site-packages\django\db\models\query.py", line 415, in __getitem__
+    raise ValueError("Negative indexing is not supported.")
+ValueError: Negative indexing is not supported.
+>>> allemp
+<QuerySet [<Employee: Uday Rasal>, <Employee: Nokia Singh>, <Employee: Amit Kumar>, <Employee: Pawan>, <Employee: 
+Trupti Kupekar>, <Employee: Aishwarya Rai bachchan>, <Employee: Sunial shetty>, <Employee: Salman Khan>, <Employee: Rohan Benerjee>, <Employee: Narendra Modi>, <Employee: Ravindra Jadeja>, <Employee: Rohit Sharma>, <Employee: Akshay Kumar>]>
+>>> for i in allemp:
+...     print(i.id, i.name, i.mobileno, i.address)
+...
+1 Uday Rasal 6351568964 Mayur Vihar
+2 Nokia Singh 123456789 Mayur vihar
+3 Amit Kumar 123456789 Mayur vihar
+4 Pawan 12345658 AnandVihar
+6 Trupti Kupekar 456321 Mumbra
+7 Aishwarya Rai bachchan 7896541230 Agra
+8 Sunial shetty 664685464 Varanashi
+9 Salman Khan 5465864 Bandra
+10 Rohan Benerjee 64684968468 Kolkata
+11 Narendra Modi 1636541 Gujarat
+12 Ravindra Jadeja 16165165165 Gujarat
+13 Rohit Sharma 1236165465 Bandra
+14 Akshay Kumar 1351156651 Canada
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ORM Query
+--------------------------------------------------
+ORM stands for Object Relational Mapping 
+-------------------------------------------------------------------------------------------------------------------------
+Create new model Customer [In models.py]
+----------------------------------------------------------------------------------
+In models.py [EMS]
+---------------------------------------------------------------------------------------------------------------------------------
+from django.db import models
+
+# Create your models here.
+
+
+class Employee(models.Model):    # Model Class
+    id=models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    mobileno = models.CharField(max_length=10)
+    address = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class Customer(models.Model):
+    # id = models.IntegerField()  # ID generated automatically. No need to write this code.
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    address = models.CharField(max_length=100)
+    mobileno = models.CharField(max_length=20)
+    salary = models.DecimalField(max_digits=18,decimal_places=2)
+
+    def __str__(self):
+        return self.name
+     
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+After than run in terminal
+------------------------------------------------------------------------------------------------
+Note: In ORM we have manager object by which we can perform all ORM Query.
+
+>> In Manager Object We will get predefined methods to perform all ORM Query.
+-------------------------------------------------------------------------------------------------------------------------
+
+ModelClassName.objects ===> ManagerObjects
+-------------------------------------------------------------------------------------------------------
+Employee.objects
+Customer.objects
+--------------------------------------------------------------------------------------------------------
+a). Create
+b). get()
+c). Filter()
+d). all()
+e). exclude()
+----------------------------------------------------------------------------------------------------------------------------
+Insert a record in MYSQL:
+---------------------------------------------------------------------------------------------------
+sytax: insert into tableName(col1,col2,col3,....)
+values(value1,value2,value3,....)
+----------------------------------------------------------------------------------------------------------------------------
+How to insert Record in ORM:
+-------------------------------------------------------------------------------------------------------------------
+class Customer(models.Model):
+    # id = models.IntegerField()  # ID generated automatically. No need to write this code.
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    address = models.CharField(max_length=100)
+    mobileno = models.CharField(max_length=20)
+    salary = models.DecimalField(max_digits=18,decimal_places=2)
+
+    def __str__(self):
+        return self.name
+------------------------------------------------------------------------------------------------------------------------------
+In Terminal ---------------------- To create ORM and Migrate
+---------------------------------------------------------------------------------------------
+>> Python manage.py makemigrations
+----------------------------------------------------------------------------------
+# Generated by Django 5.2.5 on 2025-09-23 05:35
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('EMS', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Customer',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=50)),
+                ('age', models.IntegerField()),
+                ('address', models.CharField(max_length=100)),
+                ('mobileno', models.CharField(max_length=20)),
+                ('salary', models.DecimalField(decimal_places=2, max_digits=18)),
+            ],
+        ),
+    ]
+
+------------------------------------------------------------------------------------------------------------------
+>> Python manage.py migrate
+-------------------------------------------------------------
+(venv) D:\2.Django2025\demoProject>python manage.py migrate
+Operations to perform:
+  Apply all migrations: EMS, admin, auth, contenttypes, sessions
+Running migrations:
+  Applying EMS.0002_customer... OK
+------------------------------------------------------------------------------------------------------------------------
+
+a). Create
+-----------------------------------------------
+We have two ways to create an object.
+--------------------------------------------------------------------------------------
+1). Method
+----------------------------------------------------------------------------------------------
+>>> from EMS.models import Customer
+>>> cus = Customer()
+>>> cus.name = "Raj"
+>>> cus.age = 23
+>>> cus.address = "New Ashok Nagar"
+>>> cus.salary=373737.25
+>>> cus.save()
+>>> cus.name
+'Raj'
+>>> cus.age
+23
+>>> cus.id
+1
+>>> cus.mobileno
+''
+>>> cus.mobileno = "123456789"
+>>> cus.save()
+>>> cus.mobileno
+'123456789'
+>>> cus.address
+'New Ashok Nagar'
+>>>
+----------------------------------------------------------------------------------------------------------------------
+2). Method
+--------------------------------------------------------------------------------------------------------------------
+>>> Customer.objects.create(name="Shivam",age=12,address="Mayur Vihar",mobileno="15656665",salary=363636.25)
+<Customer: Shivam>
+>>> Customer.objects.create(name="Tikam",age=40,address="Mayur vihar phase-2",mobileno="165656456",salary=123225) 
+<Customer: Tikam>
+>>> Customer.objects.create(name="shivam",age=55,address="Mayur Vihar",mobileno="78545652",salary=363636.12)
+<Customer: shivam>
+>>> Customer.objects.create(name="Piyush",age=27,address="Nirmal vihar",mobileno="12345896",salary=45623.25)
+<Customer: Piyush>
+----------------------------------------------------------------------------------------------------------------------------------
 
 
 
