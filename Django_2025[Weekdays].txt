@@ -2344,9 +2344,971 @@ ORM Query
 >>> Customer.objects.filter(name__contains='a') 
 <QuerySet [<Customer: Raj>, <Customer: Shivam>, <Customer: Tikam>, <Customer: shivam>, <Customer: shivam>]>
 ---------------------------------------------------------------------------------------------------------
+>> Relationship between Models:-
+----------------------------------------------------------------------------------
+>> There are three types of relation between Models:-
+-----------------------------------------------------------------------
+1). One to One. : One user has one profile.
+2). One to Many || Many to one  --> One user has multiple orders.---->  
+3). Many to Many.: ---> html,css,javaScript:uday:h|asish:h|binod:h---|css-u|css-a
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------
+1). Student and Course----> [Many to Many] 
+------------------------------------------------
+1). Student ==> Many course [One student has Many Courses]
+2). Course ===> Many Student [Many Course has many students]
+-------------------------------------------------------------------------------------
+2). [One to Many or Many to One]
+
+1). One Student  ----> Payments[One student has many payments]
+-------------------------------------------------------------------------
+3). One to One
+
+1). One Student ---- PersonalDetails
+------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+>> How to Create Models in these Relationships:
+--------------------------------------------------------------------------------------------
+
+from django.db import models
+
+# Create your models here.
+
+
+class Student(models.Model):
+    name = models.CharField(max_length=50, null=False, blank=False) # Mandatory fields (*) mark
+    age = models.IntegerField()
+    mobileno = models.CharField(max_length=20)
+    dob = models.DateField(null=True, blank=True)  # Not Mandatory
+    pic = models.ImageField(null=True, blank=True)
+    created_date = models.DateField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+--------------------------------------------------------------------------------------------------------
+>> Relationship 
+--------------------------------------------------------------------
+1). One to Many Relationship [student-PaymentDetils]
+Note: To maintain relationship in django we have predefined models fileds by 
+ which you can establish relationship among models.
+
+
+a). One to one
+b). Foregin key. [Mone to Many or many to one]
+c). Many to many
+-----------------------------------------------------------------------------------------------------
+In models.py[SMS]
+-----------------------------------------------------------------
+from django.db import models
+
+# Create your models here.
+
+
+class Student(models.Model):
+    name = models.CharField(max_length=50, null=False, blank=False) # Mandatory fields (*) mark
+    age = models.IntegerField()
+    mobileno = models.CharField(max_length=20)
+    dob = models.DateField(null=True, blank=True)  # Not Mandatory
+    pic = models.ImageField(null=True, blank=True)
+    created_date = models.DateField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+    
+
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+    
+
+class PaymentDetails(models.Model):
+    amount = models.IntegerField()
+    payment_mode = models.CharField(max_length=100, choices=[("Cash","Cash"),('Debit Card','Debit Card'),('Credit Card','Credit Card'),('PayTM',"PayTM")])
+    payment_date = models.DateTimeField(auto_now=True)
+
+    student = models.ForeignKey(Student, null=False, blank=False, on_delete=models.CASCADE) #[ student is variable but variable must be same as relationship database name [student] but in smallcase]
 
 
 
+-------------------------------------------------------------------------------------------------------
+Note: on_delete=models.CASCADE: When i delete any student name from the record then it's all payment
+information will be deleted.
+-------------------------------------------------------------------------------------------------------
+sid 	name
+1	"Uday Rasal"
+2 	"Ashish Sarule"
+----------------------------------------
+PaymentDetials
+--------------------------------------
+pid	amount	sid.
+1	5000	1
+2	3000	2
+3	5000	1
+------------------------------------------------------------
+Add Data to PaymentDetils
+--------------------------------------------
+Ctrl click to launch VS Code Native REPL
+Python 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from SMS.models import *
+>>> s1 = Student.objects.get(id=2)
+>>> s1.id
+2
+>>> s1 = Student.objects.get(id=3) 
+>>> s1.name
+'Binod'
+>>> s1.id
+3
+>>> s1.mobileno
+'49889448'
+
+>>> p1 = PaymentDetails()
+>>> p1.amount = 58000
+>>> p1.payment_mode = "Credit Card"
+>>> p1.student_id = s1.id  
+>>> p1.save()
+-----------------------------------------------------------------------------------------------
+>> Waq to get student name whose payment is 5000
+--------------------------------------------------------------------------
+>>> p1 = Student.objects.get(name="Ashish Sarule")
+>>> p1.id
+2
+>>> p1.name
+'Ashish Sarule'
+>>> p1.age
+30
+
+>>> allp = p1.paymentdetails_set.all() 
+>>> allp
+<QuerySet [<PaymentDetails: PaymentDetails object (3)>, <PaymentDetails: PaymentDetails object (4)>]>
+---------------------------------------------------------------------------------------------------------
+>>> s1 = Student.objects.get(name="Uday Sharad Rasal") 
+>>> s1.name
+'Uday Sharad Rasal'
+>>> allp = s1.paymentdetails_set.all()
+>>> allp
+<QuerySet [<PaymentDetails: PaymentDetails object (1)>, <PaymentDetails: PaymentDetails object (2)>]>
+---------------------------------------------------------------------------------------------
+>> Search amount how many times student pay [in Terminal]
+--------------------------------------------------------
+>>> s1 = Student.objects.get(name="Uday Sharad Rasal") 
+>>> s1.name
+'Uday Sharad Rasal'
+>>> allp = s1.paymentdetails_set.all()
+>>> allp
+<QuerySet [<PaymentDetails: PaymentDetails object (1)>, <PaymentDetails: PaymentDetails object (2)>]>
+>>> for p in allp:
+... 
+...     print(p.payment_mode)
+... 
+
+Debit Card
+>>> for p in allp:
+...     print(p.amount)
+... 
+3000
+5000
+>>> s2 = Student.objects.get(name="Ashish Sarule") 
+>>> s2.name
+'Ashish Sarule'
+>>> allp1 = s2.paymentdetails_set.all() 
+>>> allp1
+<QuerySet [<PaymentDetails: PaymentDetails object (3)>, <PaymentDetails: PaymentDetails object (4)>]>
+>>> for i in allp:
+...     print(i.amount)
+... 
+3000
+5000
+>>> for k in allp1:
+...     print(k.payment_mode)
+... 
+PayTM
+Cash
+-----------------------------------------------------------------------------------
+View paymentDetails on frontend.
+-----------------------------------------------------------------------------------------------
+In SMS/paymentdetails.html [SMS]
+---------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafc;
+            /* Light pastel background */
+            color: #333;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #4a90e2;
+            font-size: 2.2em;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 12px 18px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .search-container button {
+            padding: 12px 25px;
+            margin-left: 10px;
+            border: none;
+            background: #4a90e2;
+            color: white;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background: #357abd;
+            transform: scale(1.05);
+        }
+
+        table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px 10px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #4a90e2;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        tr:hover {
+            background: #f1f7ff;
+            transition: 0.3s;
+        }
+
+        td {
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+
+            table,
+            th,
+            td {
+                font-size: 14px;
+            }
+
+            .search-container input[type="text"] {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+
+        <h1>STUDENT WISE PAYMENT DETAILS</h1>
+
+        <div class="search-container">
+            <label>Enter Student ID: </label>
+            <input type="text" name="txtID" placeholder="e.g. 12345" value="{{sid}}">
+            <button type="submit">Show Details</button>
+        </div>
+
+        <table>
+            <tr>
+                <th>S.No</th>
+                <th>NAME</th>
+                <th>AMOUNT</th>
+                <th>PAYMENT MODE</th>
+                <th>DATE</th>
+            </tr>
+            <!-- {{payment}} {{stu}} -->
+            {% for pay in payment %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{stu.name}}</td>
+                <td>{{pay.amount}}</td>
+                <td>{{pay.payment_mode}}</td>
+                <td>{{pay.payment_date}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+
+</html>
+--------------------------------------------------------------------------------------------------------
+In views.py [SMS]
+--------------------------------------------------------------------------------------------
+
+from django.shortcuts import render
+from SMS.models import *
+
+# Create your views here.
+
+
+def view_student_wise_paymentDetails(request):
+    if request.method == "GET":
+        resp = render(request,"SMS/paymentDetails.html")
+        return resp
+    elif request.method == "POST":
+        sid = int(request.POST.get('txtID',0))
+
+        s1 = Student.objects.get(id=sid)
+
+        allp = s1.paymentdetails_set.all()
+        # print("ALLP:-----",allp)
+        d1 = {'payment':allp,'stu':s1,'sid':sid}
+    resp = render(request,"SMS/paymentDetails.html",context=d1)
+    return resp
+--------------------------------------------------------------------------------------------------------
+In urls.py [SMS]
+-------------------------------------------------------------------------------
+from django.urls import path 
+from SMS.views import *
+
+
+urlpatterns = [
+    path('payment/',view_student_wise_paymentDetails),
+    
+]
+---------------------------------------------------------------------------------------------------------
+In models.py [SMS]  [Create Relationship between students and course (many to many)]
+-----------------------------------------------------------------------------------------
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+
+    student = models.ManyToManyField(Student,null=True,blank=True)
+
+    def __str__(self):
+        return self.name
+--------------------------------------------------------------------------------------------------
+Add data through terminal:-
+------------------------------------------------------------------------------
+(venv) D:\2.Django2025\demoProject>python manage.py shell
+11 objects imported automatically (use -v 2 for details).
+
+Ctrl click to launch VS Code Native REPL
+Python 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from SMS.models import Course
+>>> from SMS.models import *     
+
+>>> s1 = Student.objects.get(id=1) 
+>>> s1.name
+'Uday Sharad Rasal'
+>>> s1.id
+1
+>>> c1 = Course.objects.get(id=1)
+>>> c1.id
+1
+>>> c1.name
+'HTML'
+>>> c1.student.add(s1)
+>>> c2 = Course.objects.get(id=2)
+>>> c2.student.add(s1)
+
+>>> s2 = Student.objects.get(id=2) 
+>>> s2.name
+'Ashish Sarule'
+>>> c1.student.add(s2)
+>>> c2.student.add(s2)
+>>> c3=Course.objects.get(id=3)
+>>> c3.name
+'JavaScript'
+
+>>> s3 = Student.objects.get(id=3) 
+>>> s3.name
+'Binod'
+
+>>> c3.student.add(s1,s3)
+---------------------------------------------------------------------------------------------------------
+Details of Course in Terminal
+---------------------------------------------------------------
+>>> from SMS.models import *
+>>> allc = Course.objects.all()
+>>> allc
+<QuerySet [<Course: HTML>, <Course: CSS>, <Course: JavaScript>, <Course: Python>]>
+--------------------------------------------------------------------------------------------------------
+In views.py [SMS]
+---------------------------------
+from django.shortcuts import render
+from SMS.models import *
+
+# Create your views here.
+
+
+def view_student_wise_paymentDetails(request):
+    if request.method == "GET":
+        resp = render(request,"SMS/paymentDetails.html")
+        return resp
+    elif request.method == "POST":
+        sid = int(request.POST.get('txtID',0))
+
+        s1 = Student.objects.get(id=sid)
+
+        allp = s1.paymentdetails_set.all()
+        # print("ALLP:-----",allp)
+        d1 = {'payment':allp,'stu':s1,'sid':sid}
+    resp = render(request,"SMS/paymentDetails.html",context=d1)
+    return resp
+
+
+
+def view_course_wise_students(request):
+    allCourse = Course.objects.all()
+    d1 = {'AllCourse':allCourse}
+    if request.method == "GET":
+        
+        resp = render(request,"SMS/courseDetails.html",context=d1)
+        return resp
+    elif request.method == "POST":
+        cid = int(request.POST.get('txtcid',0))
+        c = Course.objects.get(id=cid)
+        d1['cid'] = c.id
+        d1['cname'] = c.name
+        allstu = c.student.all()
+        d1['student'] = allstu
+
+    resp = render(request,'SMS/courseDetails.html',context=d1)
+    return resp
+
+
+
+-----------------------------------------------------------------------------------------
+In urls.py [SMS]
+--------------------------------------------
+from django.urls import path 
+from SMS.views import *
+
+
+urlpatterns = [
+    path('payment/',view_student_wise_paymentDetails),
+    path('course/',view_course_wise_students),
+    
+]
+-------------------------------------------------------------------------------------------------------
+In courseDetails.html[SMS]
+-----------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(252, 182, 159, 0.3);
+            animation: slideIn 0.6s ease-out;
+            margin-bottom: 30px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-icon {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-icon span {
+            font-size: 60px;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        label {
+            color: #555;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .label-icon {
+            font-size: 22px;
+            margin-right: 8px;
+        }
+
+        select {
+            flex: 1;
+            min-width: 250px;
+            padding: 16px 20px;
+            border: 2px solid #ffe4e1;
+            border-radius: 15px;
+            font-size: 16px;
+            color: #555;
+            background-color: #fff9f8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%23ff9a9e' d='M7 10L2 5h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            padding-right: 45px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        select:hover {
+            border-color: #ffb6b9;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.1);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #ff9a9e;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 154, 158, 0.1);
+        }
+
+        button {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 154, 158, 0.3);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(255, 154, 158, 0.4);
+            background: linear-gradient(135deg, #fecfef 0%, #ff9a9e 100%);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .decorative-line {
+            height: 3px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ff9a9e 100%);
+            border-radius: 2px;
+            margin: 35px 0;
+            opacity: 0.3;
+        }
+
+        /* Student Table Styles */
+        .table-card {
+            background: #ffffff;
+            padding: 45px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(252, 182, 159, 0.3);
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .table-header {
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .table-title {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .course-name-highlight {
+            color: #ff9a9e;
+            font-weight: 800;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        thead th {
+            padding: 20px 20px;
+            text-align: left;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        thead th:first-child {
+            border-top-left-radius: 15px;
+            text-align: center;
+            width: 100px;
+        }
+
+        thead th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #ffe4e1;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(to right, #fff9f8, #ffffff);
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.1);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 20px 20px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        tbody td:first-child {
+            text-align: center;
+            font-weight: 700;
+            color: #ff9a9e;
+            font-size: 16px;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .mobile-number {
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        .course-badge {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ff6b6b;
+            display: inline-block;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .no-data-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-data-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 35px 25px;
+            }
+
+            .table-card {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .header-icon span {
+                font-size: 50px;
+            }
+
+            .form-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select {
+                min-width: 100%;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table-title {
+                font-size: 20px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            thead th, tbody td {
+                padding: 15px 10px;
+            }
+
+            .course-badge {
+                font-size: 11px;
+                padding: 5px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Form Card -->
+            <div class="form-card">
+                <div class="header-icon">
+                    <span>📚</span>
+                </div>
+                
+                <h1>Course Wise Students Details</h1>
+                
+                <div class="decorative-line"></div>
+                
+                <div class="form-group">
+                    <label for="course-select">
+                        <span class="label-icon">🎓</span>
+                        Course Name:
+                    </label>
+                    <select name="txtcid" id="course-select">
+                        {% for course in AllCourse %}
+                        {% if cid == course.id %}
+                        <option value="{{course.id}}" selected>{{course.name}}</option>
+                        {% else %}
+                        <option value="{{course.id}}">{{course.name}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit">
+                        🔍 Get Student Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Student Table Card -->
+            {% if student %}
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-title">
+                        👥 We Have Following Students of <span class="course-name-highlight">{{cname}}</span> Given Below:
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sr. No</th>
+                                <th>Student Name</th>
+                                <th>Mobile No.</th>
+                                <th>Course Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stu in student %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td class="student-name">{{stu.name}}</td>
+                                <td class="mobile-number">{{stu.mobileno}}</td>
+                                <td>
+                                    <span class="course-badge">{{cname}}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
+-------------------------------------------------------------------------------------------------------
 
 
 
