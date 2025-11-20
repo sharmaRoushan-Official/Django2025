@@ -2840,6 +2840,7 @@ In courseDetails.html[SMS]
 -----------------------------------------------------------------------------
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2885,9 +2886,12 @@ In courseDetails.html[SMS]
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0) scale(1);
             }
+
             50% {
                 transform: translateY(-20px) scale(1.05);
             }
@@ -2914,6 +2918,7 @@ In courseDetails.html[SMS]
                 opacity: 0;
                 transform: translateY(-30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -2932,9 +2937,12 @@ In courseDetails.html[SMS]
         }
 
         @keyframes bounce {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-10px);
             }
@@ -3056,6 +3064,7 @@ In courseDetails.html[SMS]
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -3223,7 +3232,8 @@ In courseDetails.html[SMS]
                 font-size: 13px;
             }
 
-            thead th, tbody td {
+            thead th,
+            tbody td {
                 padding: 15px 10px;
             }
 
@@ -3234,21 +3244,22 @@ In courseDetails.html[SMS]
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <form method="post">
             {% csrf_token %}
-            
+
             <!-- Form Card -->
             <div class="form-card">
                 <div class="header-icon">
                     <span>📚</span>
                 </div>
-                
+
                 <h1>Course Wise Students Details</h1>
-                
+
                 <div class="decorative-line"></div>
-                
+
                 <div class="form-group">
                     <label for="course-select">
                         <span class="label-icon">🎓</span>
@@ -3270,11 +3281,13 @@ In courseDetails.html[SMS]
             </div>
 
             <!-- Student Table Card -->
-            {% if student %}
+            <!-- Student Table Card -->
+            {% if cname %}
             <div class="table-card">
                 <div class="table-header">
                     <div class="table-title">
-                        👥 We Have Following Students of <span class="course-name-highlight">{{cname}}</span> Given Below:
+                        👥 We Have Following Students of <span class="course-name-highlight">{{cname}}</span> Given
+                        Below:
                     </div>
                 </div>
 
@@ -3298,6 +3311,13 @@ In courseDetails.html[SMS]
                                     <span class="course-badge">{{cname}}</span>
                                 </td>
                             </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="no-data">
+                                    <div class="no-data-icon">📭</div>
+                                    <div class="no-data-text">No Student Enrolled in this Course.</div>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -3307,9 +3327,353 @@ In courseDetails.html[SMS]
         </form>
     </div>
 </body>
+
 </html>
 -------------------------------------------------------------------------------------------------------
+>> Model Form:-
+-----------------------------------------------------------------------
+>> Model form is very powerful concept in Django.
+>> In Model form very less html code you have to write.
+>> It creates all html content dynamically for you.
+-------------------------------------------------------------------------------------------------------
+>> Model ---> Relationship Between Models ----> Model Form.
+-------------------------------------------------------------------------------------------------------
+>> Student Model ------------------------> Student [Model Form]
+-----------------------------------------------------------------------------------------
+Steps to create Model Form:-
+--------------------------------------------------------------------------------------------
+1). Right click on your app and create one python file which is named as forms.py
+-----------------------------------------------------------------------------------------------
+Note:-
+	°Uisng Model form it will perform both client and server side validation.
+	°Validation: It check all the necessary fields filled by the user is correct or not.
+	°Client side: which runs at the client machine.[frontend->User Interface,"Html,css,javascript"]
+	°Server side: Which runs at the server machine. [Backend--> Python]
+--------------------------------------------------------------------------------------------------------
+--------------------------Creating Student Registration Form---------------------------------------
+-------------------------------------------------------------------------------------------------------
+In forms.py [SMS]
+----------------------------------------------------------------------------------
+from SMS.models import * 
+from django import forms
 
 
+class StudentForm(forms.ModelForm): #Model Form
+    class Meta:
+        model = Student
+        fields = '__all__' #['name','age']
+--------------------------------------------------------------------------------------------------------
+
+In views.py [SMS]
+--------------------------------------------------------------------------------
+# model form
+def view_student_frm(request):
+    if request.method == "GET":
+        frm_unbound = StudentForm()  # unbound means without data.
+        d1 = {'form':frm_unbound}
+        resp = render(request,"SMS/stufrm.html",context=d1)
+        return resp
+    elif request.method == "POST":
+        frm_bound = StudentForm(request.POST)
+        if frm_bound.is_valid():   # Server Side check
+            frm_bound.save()
+            resp = HttpResponse("<h1>Student Registered Successfully!!</h1>")
+            return resp
+        else:
+            d1 = {'form':frm_unbound}
+            resp = render(request,"SMS/stufrm.html",context=d1)
+            return resp
+--------------------------------------------------------------------------------------------------------
+In urls.py [SMS]
+---------------------------------------------------------------------------------
+from django.urls import path 
+from SMS.views import *
+
+
+urlpatterns = [
+    path('stufrm/',view_student_frm),
+    
+    
+]
+---------------------------------------------------------------------------------------------------------
+In stufrm.html [SMS]
+---------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #e8f0fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 30px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #1a73e8;
+            color: white;
+            padding: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #155fc2;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <h1>Student Registration Form</h1>
+        <table border="1">
+            <tr>
+                <th>Field Name</th>
+                <th>Input</th>
+            </tr>
+            {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td>
+                <td>{{ field }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Register</button>
+    </form>
+</body>
+
+
+</html>
+
+--------------------------------------------------------------------------------------------------------
+Payment forms
+----------------------------------------------------------
+In forms.py [SMS]
+---------------------------------------------------------------------------------------------------
+from SMS.models import * 
+from django import forms
+
+
+class StudentForm(forms.ModelForm): #Model Form
+    class Meta:
+        model = Student
+        fields = '__all__' #['name','age']
+        
+
+class PaymentDetailsForm(forms.ModelForm):
+    class Meta:
+        model = PaymentDetails
+        fields = '__all__'
+        
+        
+--------------------------------------------------------------------------------------------------------
+In views.py [SMS]
+--------------------------------------------------------------------------------------
+def view_paymentdetail_form(request):
+    if request.method == "GET":
+        frm_unbound = PaymentDetailsForm()
+        d1 = {'form':frm_unbound}
+        resp = render(request,"SMS/payfrm.html",context=d1)
+        return resp
+    elif request.method == "POST":
+        frm_bound = PaymentDetailsForm(request.POST)
+        if frm_bound.is_valid():
+            frm_bound.save()
+            resp = HttpResponse("<h1>Payment Done Successfully!</h1>")
+            return resp
+        else:
+            d1 = {'form':frm_unbound}
+            resp = render(request,"SMS/payfrm.html",context=d1)
+            return resp
+------------------------------------------------------------------------------------------------------
+In urls.py [SMS]
+-------------------------------------------------------------------
+
+from django.urls import path 
+from SMS.views import *
+
+
+urlpatterns = [
+    path('payment/',view_student_wise_paymentDetails),
+    path('course/',view_course_wise_students),
+    path('stufrm/',view_student_frm),
+    path('payfrm/',view_paymentdetail_form),
+    
+]
+--------------------------------------------------------------------------------------------------------
+In payfrm.html
+----------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <h1>**Payment Details Form**</h1>
+    <form method="post">
+        {% csrf_token %}
+        <table border="2px solid black">
+            <tr>
+                <th>{{form}}</th>
+            </tr>
+            <tr>
+                <td><button>Pay</button></td>
+            </tr>
+        </table>
+    
+    </form>
+</body>
+</html>
+--------------------------------------------------------------------------------------------------------
+<input type="text" name="name" maxlength="50" id="id_name" required >
+Model Form:-
+---------------------------------
+when we create textbox using model then some attributes are missing.
+we will get some attributes which are as- type, name, max_lenght, required, id
+-------------------------------------------------------------------------------------------------------
+How to add Dynmaic attributes in the model form.
+------------------------------------------------------------------------------------------------------
+1). Go to forms.py and write some code to add attribute dynamically.
+--------------------------------------------------------------------------------------------------
+from SMS.models import * 
+from django import forms
+
+
+class StudentForm(forms.ModelForm): #Model Form
+    class Meta:
+        model = Student
+        fields = '__all__' #['name','age']
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = "form-control"
+            field.widget.attrs['placeholder']= "Enter "+field.label+" *"
+        
+
+class PaymentDetailsForm(forms.ModelForm):
+    class Meta:
+        model = PaymentDetails
+        fields = '__all__'
+--------------------------------------------------------------------------------------
+>> Static Vs Media File in Django.
+-----------------------------------------------------------------------------------
+>> It is a collection of CSS,JS,Images and fonts.
+--------------------------------------------------------------------------------------
+
+In SMS [views.py]  <-----------creating views
+----------------------------------------------------------------------
+
+
+def view_staticFile_Ex(request):
+    resp = render(request,"SMS/staticEx.html")
+    return resp
+---------------------------------------------------------------------------------
+In urls.py [SMS]
+
+
+from django.urls import path 
+from SMS.views import *
+
+
+urlpatterns = [
+    path('payment/',view_student_wise_paymentDetails),
+    path('course/',view_course_wise_students),
+    path('stufrm/',view_student_frm),
+    path('payfrm/',view_paymentdetail_form),
+    path('staticex/',view_staticFile_Ex),
+    
+]
+-------------------------------------------------------------------------------------
+In staticEx.html [SMS]
+--------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello world</h1>
+</body>
+</html>
+--------------------------------------------------------------------------------------
+How to add External CSS and JS and Images:
+-------------------------------------------------------------------------------
+1. Right click on your app and Create a new folder name as static.
+2. Right click on your static folder and create new folder name as your appName.
+3. Now right click on your appName folder and create one new folder name as CSS, and now you can create N number of CSS files inside this folder.
+
+4. Now Right click on your appName folder and create one new folder name as js now you can add or create N number of js file inside this folder.
+
+5. Now right click on your appName Folder and create one new folder name as images and you can create or add N number of images inside this folder.
+--------------------------------------------------------------------------------------
+Go to Settings.py
+------------------------------------------------------------------------
+>> When you work on static files in Django then it set default static path for you in stings.py Files
+
+
+STATIC_URL = "static/"   # http:12.0.0.1:8000/static/
+STATIC_ROOT = BASE_DIR/   # 'static/'  # Now i have defined Static ROOT
+----------------------------------------------------------------------------------
 
 
